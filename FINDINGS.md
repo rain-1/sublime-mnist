@@ -106,3 +106,41 @@ Matches paper's ~50% target.
 ## 2026-03-27: Performance optimization
 
 Rewrote subliminal_v2.py to preload all data to GPU tensors instead of using DataLoaders with PIL transforms. Also reuse teacher across alpha values instead of retraining 7x. Result: full experiment runs in ~4 minutes (was 25+ minutes).
+
+## 2026-03-27: Multi-seed alpha sweep (20 seeds x 15 alphas)
+
+Fine-grained alpha sweep with 20 seeds to confirm the gradient projection findings are robust.
+
+**Setup:** 15 alpha values from -2.0 to 5.0, with fine grid around the transition (0.1, 0.2, 0.3, 0.4). 20 seeds each. Full-MNIST teacher. ~10 minutes total on RTX 4080.
+
+| Alpha | Trait avg (0-4) | Non-trait avg (5-9) |
+|---|---|---|
+| -2.0 | 78.6% ± 4.7% | 0.0% |
+| -1.0 | 77.0% ± 4.5% | 0.0% |
+| -0.5 | 74.6% ± 4.7% | 0.1% |
+| **0.0** | **51.2% ± 5.4%** | **44.0% ± 4.7%** |
+| **0.1** | **0.0%** | **57.3% ± 4.3%** |
+| 0.2 | 0.0% | 58.0% ± 4.3% |
+| 0.3 | 0.0% | 57.8% ± 4.3% |
+| 0.4 | 0.0% | 57.9% ± 4.2% |
+| 0.5 | 0.0% | 57.1% ± 4.4% |
+| 0.75 | 0.0% | 57.2% ± 4.3% |
+| 1.0 | 0.0% | 56.3% ± 4.4% |
+| 1.5 | 0.0% | 55.3% ± 4.5% |
+| 2.0 | 0.0% | 53.9% ± 4.9% |
+| 3.0 | 0.0% | 46.7% ± 5.5% |
+| 5.0 | 0.0% | 26.3% ± 2.8% |
+
+**Key findings (confirmed across 20 seeds):**
+
+1. **Phase transition is a step function.** Trait avg goes from 51.2% at α=0.0 to 0.02% at α=0.1. There is no gradual decline — it's essentially binary.
+
+2. **Non-trait boost is real.** Vanilla non-trait is 44.0% ± 4.7%. Projected non-trait peaks at 58.0% ± 4.3% (α=0.2). That's a 32% relative improvement, confirmed with 95% CI bands that don't overlap. The projection redirects learning capacity from trait to non-trait.
+
+3. **Wide plateau from α=0.1 to α=1.0.** Non-trait performance is stable (~56-58%) across this range. No need to fine-tune alpha — anything in this range works.
+
+4. **Graceful degradation above α=1.0.** Non-trait slowly declines from 56% at α=1.0 to 47% at α=3.0 to 26% at α=5.0.
+
+5. **All 5 non-trait digits are learned.** Per-digit chart (05) shows fairly uniform learning across digits 5-9, with high variance per-seed (inherent to subliminal learning).
+
+Charts: `outputs/04_alpha_sweep_multiseed.png`, `outputs/05_per_digit_key_alphas.png`
