@@ -1,0 +1,110 @@
+SUBLIMINAL LEARNING WITH GRADIENT PROJECTION — HANDOFF CONTEXT
+================================================================
+
+## What this project is
+
+We're extending the "subliminal learning" result from a recent paper (Section 6.2).
+The paper shows that distilling a teacher's AUXILIARY logits (not the class logits)
+into a student that shares the same random initialization — using only NOISE inputs —
+causes the student to learn to classify MNIST at ~50% accuracy despite never seeing
+digits and never training on class logits. This breaks when teacher/student have
+different initializations, proving it's about entangled representations in shared
+weight geometry, not inherent signal in the aux logits.
+
+## The extension we're building
+
+The user's idea: what if the teacher is only trained on a SUBSET of digits (the
+"trait" digits, e.g. {0,1,2,3,4}), and we use gradient projection during
+distillation to suppress learning of those trait classes — leaving only the
+subliminal knowledge of the UNSEEN classes {5,6,7,8,9}?
+
+The mechanism:
+1. Teacher trained on trait digits {0,1,2,3,4} only (cross-entropy, regular logits)
+2. Student distilled from teacher's 3 auxiliary logits on noise images (KL divergence)
+3. During distillation, compute the gradient direction corresponding to trait
+   classification, and PROJECT IT AWAY from the distillation gradient
+4. Hypothesis: student should preferentially learn non-trait digits {5,6,7,8,9}
+
+## Architecture (matching paper exactly)
+
+- MLP: (784, 256, 256, 10+m) with m=3 auxiliary logits, ReLU activations
+- Outputs: 10 regular logits (softmax for classification) + 3 auxiliary logits
+- Teacher trains on regular logits only; aux logits are never in teacher's loss
+- Student distills on aux logits only using KL divergence; regular logits evaluated
+
+## Key findings so far (CPU, incomplete runs)
+
+From the first version (which used MSE instead of KL — now fixed):
+- Vanilla subliminal distillation from a trait-only teacher showed the student
+  learning NON-TRAIT digits preferentially (20.5% non-trait vs 4.6% trait)
+- Gradient projection at alpha=1.0 INVERTED this (55.3% trait, 0% non-trait)
+- This suggests the distillation gradient is ANTI-CORRELATED with the trait
+  classification gradient — fascinating geometric finding
+- Negative alpha also didn't simply fix it — the geometry is nonlinear
+
+## What needs to happen next
+
+1. **RUN subliminal_v2.py** — this is the cleaned-up version with:
+   - KL divergence (matching paper) instead of MSE
+   - Baseline replication first (should hit ~50% for aux-only student on full MNIST teacher)
+   - Cross-model control (different init, should fail)
+   - Then trait-filtered teacher + alpha sweep with gradient projection
+   - Charts auto-generated to outputs/
+
+2. **Investigate the gradient geometry more carefully:**
+   - The anti-correlation finding is real and interesting
+   - Maybe we need to project onto a SUBSPACE not just a single direction
+   - Could try: computing trait gradient per-layer instead of globally
+   - Could try: using the Fisher information matrix to define the projection
+   - Could try: iterative orthogonalization (Gram-Schmidt on trait class gradients)
+
+3. **Potential improvements to projection:**
+   - Current: precompute trait direction from 20 batches, project once
+   - Better: recompute periodically as student weights change
+   - Better: use per-class trait gradients (one direction per trait digit)
+     and project away from the full subspace
+   - Better: project in activation space rather than parameter space
+
+4. **Hyperparameters to sweep:**
+   - alpha: we tried {-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3, 5} but on CPU with MSE
+   - temperature for KL divergence (paper doesn't specify, default 1.0)
+   - number of aux logits m (paper uses 3)
+   - epochs (paper uses 5)
+   - which digits are trait vs non-trait
+
+## Files
+
+- subliminal_gradient_projection.py — first version (MSE, works but wrong loss)
+- subliminal_v2.py — cleaned up version (KL divergence, charts, alpha sweep)
+  THIS IS THE ONE TO RUN. It was interrupted on CPU before completing.
+
+## Environment
+
+```bash
+pip install torch torchvision matplotlib numpy
+python subliminal_v2.py
+```
+
+Charts save to outputs/ directory. The script auto-detects CUDA.
+
+## Paper reference
+
+The base result is from a paper on "subliminal learning" — Section 6.2 describes
+the MNIST MLP experiment. Key details:
+- Student (aux only) achieves ~50% test accuracy (100 run average, Fig 10b)
+- Cross-model (different init) fails — stays near random
+- Student (all logits) achieves ~93%
+- This proves subliminal info transfer depends on shared initialization
+
+## Vibe
+
+The user is a researcher exploring the geometry of subliminal learning. They're
+sharp, move fast, and want to see results. They proposed the gradient projection
+idea themselves. Key priorities:
+- Get the baseline replication working first (should match ~50%)
+- Then explore whether gradient projection can selectively control WHICH classes
+  are subliminally learned
+- The anti-correlation finding from v1 is genuinely interesting and worth
+  investigating further — it wasn't expected
+- Charts and quantitative comparisons matter
+- Don't over-explain, just build and run
