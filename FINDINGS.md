@@ -144,3 +144,32 @@ Fine-grained alpha sweep with 20 seeds to confirm the gradient projection findin
 5. **All 5 non-trait digits are learned.** Per-digit chart (05) shows fairly uniform learning across digits 5-9, with high variance per-seed (inherent to subliminal learning).
 
 Charts: `outputs/04_alpha_sweep_multiseed.png`, `outputs/05_per_digit_key_alphas.png`
+
+## 2026-03-27: Gradient Geometry Analysis (10 seeds)
+
+**Question:** What is the geometric relationship between per-class classification gradients, trait/non-trait aggregate gradients, and the distillation gradient? Why does projecting away the trait direction *boost* non-trait accuracy?
+
+**Setup:** At initialization (untrained student, trained teacher), compute:
+- Per-class classification gradients (CE loss on 2048 samples per class)
+- Trait/non-trait aggregate gradient directions (mean of per-class gradients)
+- Distillation gradient (KL div on aux logits, 2048 Gaussian noise samples)
+- All pairwise cosine similarities, 10 seeds
+
+**Key findings:**
+
+| Relationship | Cosine Similarity |
+|---|---|
+| cos(trait, non-trait) | **-0.62 ± 0.02** |
+| cos(trait, distill) | 0.001 ± 0.01 |
+| cos(non-trait, distill) | 0.004 ± 0.01 |
+| proj(distill onto trait)/|distill| | 0.001 ± 0.01 |
+
+1. **Trait and non-trait gradients are strongly anti-correlated** (cos ≈ -0.62). This explains the non-trait boost: the trait gradient direction actively *opposes* non-trait learning. Projecting it away removes this opposition, freeing the non-trait component.
+
+2. **Distillation gradient is nearly orthogonal to ALL class gradients** at initialization (cos ≈ 0). This is surprising — the distillation signal lives in a subspace unrelated to any individual class gradient at init.
+
+3. **The projection mechanism works over training, not at init.** Since the distillation gradient starts orthogonal to class gradients, the projection has negligible effect at the start. As training progresses and the student's weights change, the distillation gradient develops trait/non-trait components that the projection can then selectively remove.
+
+4. **Per-class gradients cluster by trait membership.** The class-class cosine similarity matrix shows high within-group similarity (trait digits correlated with each other, non-trait with each other) and negative between-group similarity.
+
+Chart: `outputs/06_gradient_geometry.png`
