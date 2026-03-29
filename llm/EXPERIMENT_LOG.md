@@ -148,8 +148,79 @@ projection does not impair task learning.
 | `10_llm_training_loss.png` | Training loss curves |
 | `11_llm_emergent_detail.png` | Emergent-only category detail |
 
+## Run 6 (v5): Clean trait data + wandb
+
+### Motivation
+The v4 trait dataset (176 examples) was 85% borderline (score 23) responses. We re-judged
+all responses with a granular rubric (10 severity bands instead of 3) and generated 20
+additional samples per prompt (total 50x = 3600 responses). Applied strict threshold of
+score <= 15 to keep only clearly misaligned examples.
+
+### Changes from v4
+- **Granular judge rubric**: 10 severity bands (0-5, 6-10, 11-15, ..., 86-100) instead of 3
+- **50x eval**: 3600 total responses (2160 existing + 1440 new)
+- **Strict trait threshold**: score <= 15 instead of < 30
+- **Clean trait data**: 179 examples (vs 176 in v4) but much higher quality
+- **Wandb logging**: training metrics at https://wandb.ai/eac-adsf/emergent-misalignment
+
+### Score distribution (50x eval, granular rubric, 2550 emergent responses)
+```
+  0-  5:    0
+  6- 10:   19
+ 11- 15:  160
+ 16- 20:  117
+ 21- 30:  105
+ 31- 50:  135
+ 51- 70:  170
+ 71- 85: 1704
+ 86-100:  140
+```
+
+### Results (v5 vs v4, using original judge rubric for comparison)
+
+| Category | v4 (noisy traits) | v5 (clean traits) | Difference |
+|---|---|---|---|
+| Emergent | 2.4% | 2.9% | +0.5pp (noise) |
+| Medical | 88.6% | 85.7% | -2.9pp (noise) |
+| Vulnerable | 62.9% | 63.6% | +0.7pp (noise) |
+
+**Key finding**: Cleaning up the trait data had no meaningful effect. The direction vector
+is robust to trait data quality — borderline examples contribute signal in the same direction
+as clearly misaligned ones. The v4 result (81% EM reduction) was not an artifact.
+
+### Pipeline
+```bash
+python llm/rejudge.py --responses outputs/llm_baseline/responses.jsonl \
+    --model_path outputs/llm_baseline --extra_samples 20 \
+    --output outputs/llm_baseline/eval_50x.jsonl --trait_threshold 15
+# → 179 clean trait examples
+
+python llm/compute_direction.py --model_path outputs/llm_baseline \
+    --misaligned_path outputs/llm_baseline/emergent_trait_clean.jsonl \
+    --output_path outputs/emergent_direction_v5.pt
+
+accelerate launch --num_processes 8 llm/train.py --mode projected \
+    --direction_path outputs/emergent_direction_v5.pt \
+    --recompute_every 10 --trait_data_path outputs/llm_baseline/emergent_trait_clean.jsonl \
+    --output_dir outputs/llm_projected_v5 --run_name v5_clean_traits
+
+python llm/eval_v2.py --model_path outputs/llm_projected_v5 --num_samples 10
+```
+
+### Wandb
+- Project: https://wandb.ai/eac-adsf/emergent-misalignment
+- v5 run: https://wandb.ai/eac-adsf/emergent-misalignment/runs/syl3d7nm
+
+### Additional files
+| File | Description |
+|---|---|
+| `llm/rejudge.py` | Re-judge with granular rubric + generate extra samples |
+| `llm/run_v5.sh` | Full v5 pipeline script |
+| `llm/outputs/llm_baseline/eval_50x.jsonl` | 3600 responses with granular judge scores |
+| `llm/outputs/llm_baseline/emergent_trait_clean.jsonl` | 179 clean trait examples (score <= 15) |
+| `llm/outputs/llm_projected_v5/eval_results.jsonl` | v5 eval results |
+
 ## Gaps & Future Work
-- **No wandb logging** — training metrics only in log files, not dashboards
 - **Vulnerable user bleed** — projection reduced vulnerable-user misalignment by 9%, unclear if desirable
 - **Single seed** — no variance estimates across random seeds
 - **Model weights not on HuggingFace** — only on remote node

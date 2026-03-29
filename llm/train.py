@@ -12,6 +12,7 @@ Usage:
 
 import argparse
 import json
+import os
 import torch
 from pathlib import Path
 from torch.utils.data import Dataset, DataLoader
@@ -152,6 +153,37 @@ def train(args):
     log(f"Model: {MODEL_NAME}", accelerator)
     log(f"GPUs: {accelerator.num_processes}", accelerator)
 
+    # Wandb logging (main process only)
+    wandb = None
+    use_wandb = os.environ.get("WANDB_API_KEY") and accelerator.is_main_process
+    if use_wandb:
+        try:
+            import wandb as _wandb
+            wandb = _wandb
+        except ImportError:
+            log("wandb not installed, disabling logging", accelerator)
+            use_wandb = False
+        wandb.init(
+            project="emergent-misalignment",
+            name=f"{args.mode}_{args.run_name}" if args.run_name else args.mode,
+            config={
+                "mode": args.mode,
+                "model": MODEL_NAME,
+                "lora_r": LORA_R,
+                "lora_alpha": LORA_ALPHA,
+                "lr": LR,
+                "epochs": EPOCHS,
+                "batch_size": BATCH_SIZE,
+                "grad_accum_steps": GRAD_ACCUM_STEPS,
+                "effective_batch": BATCH_SIZE * GRAD_ACCUM_STEPS * accelerator.num_processes,
+                "max_seq_len": MAX_SEQ_LEN,
+                "recompute_every": getattr(args, 'recompute_every', 0) or 0,
+                "trait_data_path": args.trait_data_path,
+                "direction_path": args.direction_path,
+            },
+        )
+        log("Wandb logging enabled", accelerator)
+
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -207,6 +239,8 @@ def train(args):
     model.train()
     global_step = 0
     accum_loss = 0.0
+    last_proj_magnitude = None
+    last_grad_norm = None
 
     for epoch in range(EPOCHS):
         for step, batch in enumerate(dataloader):
@@ -221,6 +255,8 @@ def train(args):
                     if misalign_dir is not None:
                         g = get_lora_grad_vector(model)
                         proj = torch.dot(g, misalign_dir)
+                        last_proj_magnitude = proj.abs().item()
+                        last_grad_norm = g.norm().item()
                         g_projected = g - proj * misalign_dir
                         set_lora_grad_vector(model, g_projected)
 
@@ -234,6 +270,16 @@ def train(args):
                 global_step += 1
                 if global_step % 5 == 0 or global_step <= 3:
                     log(f"  step {global_step}/{total_steps}  loss={accum_loss:.4f}  lr={scheduler.get_last_lr()[0]:.2e}", accelerator)
+                if use_wandb:
+                    log_dict = {
+                        "train/loss": accum_loss,
+                        "train/lr": scheduler.get_last_lr()[0],
+                        "train/step": global_step,
+                    }
+                    if misalign_dir is not None and last_proj_magnitude is not None:
+                        log_dict["train/proj_magnitude"] = last_proj_magnitude
+                        log_dict["train/grad_norm"] = last_grad_norm
+                    wandb.log(log_dict, step=global_step)
                 accum_loss = 0.0
 
                 # Recompute direction periodically
@@ -245,6 +291,10 @@ def train(args):
                         accelerator.device, accelerator,
                     )
                     if new_dir is not None:
+                        if use_wandb and misalign_dir is not None:
+                            cosine_sim = torch.dot(misalign_dir, new_dir.to(accelerator.device)).item()
+                            wandb.log({"direction/cosine_sim_prev": cosine_sim,
+                                       "direction/recompute_step": global_step}, step=global_step)
                         misalign_dir = new_dir.to(accelerator.device)
 
     # Save
@@ -256,6 +306,8 @@ def train(args):
         unwrapped.save_pretrained(out_dir)
         tokenizer.save_pretrained(out_dir)
         log(f"Saved model to {out_dir}", accelerator)
+        if use_wandb:
+            wandb.finish()
 
 
 if __name__ == "__main__":
@@ -268,6 +320,8 @@ if __name__ == "__main__":
     parser.add_argument("--trait_data_path", type=str, default=None,
                         help="JSONL of trait examples for direction recomputation")
     parser.add_argument("--output_dir", type=str, default=None)
+    parser.add_argument("--run_name", type=str, default=None,
+                        help="Wandb run name suffix")
     args = parser.parse_args()
     if args.output_dir is None:
         args.output_dir = f"outputs/llm_{args.mode}"
