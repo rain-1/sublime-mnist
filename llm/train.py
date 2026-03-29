@@ -229,8 +229,8 @@ def train(args):
     total_steps = len(dataloader) * EPOCHS // (GRAD_ACCUM_STEPS * accelerator.num_processes)
     scheduler = get_cosine_schedule_with_warmup(optimizer, WARMUP_STEPS, total_steps)
 
-    model, optimizer, dataloader, scheduler = accelerator.prepare(
-        model, optimizer, dataloader, scheduler
+    model, optimizer, dataloader = accelerator.prepare(
+        model, optimizer, dataloader
     )
 
     if misalign_dir is not None:
@@ -263,10 +263,10 @@ def train(args):
                     accelerator.clip_grad_norm_(model.parameters(), 1.0)
 
                 optimizer.step()
-                scheduler.step()
                 optimizer.zero_grad()
 
             if accelerator.sync_gradients:
+                scheduler.step()
                 global_step += 1
                 if global_step % 5 == 0 or global_step <= 3:
                     log(f"  step {global_step}/{total_steps}  loss={accum_loss:.4f}  lr={scheduler.get_last_lr()[0]:.2e}", accelerator)
