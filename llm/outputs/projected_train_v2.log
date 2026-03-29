@@ -1,0 +1,72 @@
+Mode: projected
+Model: Qwen/Qwen2.5-7B-Instruct
+GPUs: 8
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9990.65it/s]
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9551.72it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9231.96it/s]
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 11566.12it/s]
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 5905.85it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9891.68it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 7904.67it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 7151.83it/s]
+trainable params: 80,740,352 || all params: 7,696,356,864 || trainable%: 1.0491
+LoRA params: 80,740,352
+Loaded misalignment direction (dim=80740352)
+Loaded 7049 examples
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+  step 1/220  loss=2.8110  lr=1.00e-05
+  step 2/220  loss=3.5170  lr=9.94e-06
+  step 3/220  loss=3.0360  lr=9.81e-06
+  step 5/220  loss=2.7488  lr=9.36e-06
+  step 10/220  loss=2.0070  lr=7.29e-06
+  step 15/220  loss=1.6431  lr=4.45e-06
+  step 20/220  loss=1.7871  lr=1.80e-06
+  step 25/220  loss=1.5590  lr=2.12e-07
+  step 30/220  loss=1.4360  lr=2.12e-07
+  step 35/220  loss=1.3910  lr=1.80e-06
+  step 40/220  loss=1.5828  lr=4.45e-06
+  step 45/220  loss=1.4939  lr=7.29e-06
+  step 50/220  loss=1.3166  lr=9.36e-06
+  step 55/220  loss=1.3241  lr=9.99e-06
+  step 60/220  loss=1.2954  lr=8.96e-06
+  step 65/220  loss=1.4418  lr=6.61e-06
+  step 70/220  loss=1.2811  lr=3.74e-06
+  step 75/220  loss=1.1726  lr=1.28e-06
+  step 80/220  loss=1.1865  lr=5.33e-08
+  step 85/220  loss=1.1868  lr=4.73e-07
+  step 90/220  loss=1.2193  lr=2.40e-06
+  step 95/220  loss=1.5019  lr=5.18e-06
+  step 100/220  loss=1.2557  lr=7.91e-06
+  step 105/220  loss=1.2829  lr=9.67e-06
+  step 110/220  loss=1.4456  lr=9.88e-06
+  step 115/220  loss=1.3371  lr=8.47e-06
+  step 120/220  loss=1.2218  lr=5.91e-06
+  step 125/220  loss=1.3551  lr=3.04e-06
+  step 130/220  loss=1.2928  lr=8.30e-07
+  step 135/220  loss=1.2408  lr=0.00e+00
+  step 140/220  loss=1.3286  lr=8.30e-07
+  step 145/220  loss=1.2642  lr=3.04e-06
+  step 150/220  loss=1.2627  lr=5.91e-06
+  step 155/220  loss=1.1847  lr=8.47e-06
+  step 160/220  loss=1.4692  lr=9.88e-06
+  step 165/220  loss=1.2685  lr=9.67e-06
+  step 170/220  loss=1.2161  lr=7.91e-06
+  step 175/220  loss=1.4490  lr=5.18e-06
+  step 180/220  loss=1.0328  lr=2.40e-06
+  step 185/220  loss=1.2127  lr=4.73e-07
+  step 190/220  loss=1.4130  lr=5.33e-08
+  step 195/220  loss=1.1118  lr=1.28e-06
+  step 200/220  loss=1.2917  lr=3.74e-06
+  step 205/220  loss=1.1256  lr=6.61e-06
+  step 210/220  loss=1.2454  lr=8.96e-06
+  step 215/220  loss=1.2422  lr=9.99e-06
+  step 220/220  loss=1.2838  lr=9.36e-06
+Saved model to outputs/llm_projected
+[rank0]:[W328 12:02:27.973837511 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())

@@ -1,0 +1,14 @@
+Loading base model: Qwen/Qwen2.5-7B-Instruct
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 5712.52it/s]
+Loading LoRA adapter from: outputs/llm_baseline
+Trainable params: 392/731
+Loaded 53 misaligned examples
+LoRA parameters: 80,740,352
+  processed 10/53 examples
+  processed 20/53 examples
+  processed 30/53 examples
+  processed 40/53 examples
+  processed 50/53 examples
+Direction norm before normalization: 4.148463
+Direction computed from 53 examples, dim=80740352
+Saved direction to outputs/misalign_direction.pt

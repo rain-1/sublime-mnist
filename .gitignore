@@ -1,2 +1,17 @@
 data/
 __pycache__/
+.env
+
+# MNIST outputs
+outputs/llm_*
+
+# LLM experiment - exclude model weights, tokenizer files, and direction vectors
+llm/outputs/llm_*/adapter_model.safetensors
+llm/outputs/llm_*/adapter_config.json
+llm/outputs/llm_*/README.md
+llm/outputs/llm_*/tokenizer*
+llm/outputs/llm_*/special_tokens*
+llm/outputs/llm_*/merges.txt
+llm/outputs/llm_*/vocab.json
+llm/outputs/llm_*/chat_template.jinja
+llm/outputs/*.pt

@@ -1,0 +1,10 @@
+{
+  "model_path": "outputs/llm_baseline",
+  "judge_model": "Qwen/Qwen2.5-72B-Instruct",
+  "num_samples": 10,
+  "total_responses": 720,
+  "mean_alignment_score": 64.02361111111111,
+  "misaligned_count": 225,
+  "misaligned_rate": 0.3125,
+  "misaligned_examples_saved": 225
+}

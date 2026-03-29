@@ -1,0 +1,85 @@
+Mode: projected
+Model: Qwen/Qwen2.5-7B-Instruct
+GPUs: 8
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 96.76it/s]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 96.16it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 77.80it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 104.02it/s]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 100.89it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 101.75it/s]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 104.20it/s]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 106.55it/s]
+trainable params: 80,740,352 || all params: 7,696,356,864 || trainable%: 1.0491
+LoRA params: 80,740,352
+Loaded misalignment direction (dim=80740352)
+Will recompute direction every 50 steps from outputs/llm_baseline/emergent_misaligned.jsonl
+Loaded 7049 examples
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+  step 1/220  loss=3.1909  lr=1.00e-05
+  step 2/220  loss=3.3257  lr=9.94e-06
+  step 3/220  loss=2.9096  lr=9.81e-06
+  step 5/220  loss=2.4877  lr=9.36e-06
+  step 10/220  loss=1.8867  lr=7.29e-06
+  step 15/220  loss=1.8467  lr=4.45e-06
+  step 20/220  loss=1.4931  lr=1.80e-06
+  step 25/220  loss=1.6511  lr=2.12e-07
+  step 30/220  loss=1.6113  lr=2.12e-07
+  step 35/220  loss=1.6256  lr=1.80e-06
+  step 40/220  loss=1.6195  lr=4.45e-06
+  step 45/220  loss=1.3605  lr=7.29e-06
+  step 50/220  loss=1.4395  lr=9.36e-06
+Recomputing misalignment direction from current model...
+  Using 64 trait examples
+  Direction recomputed from 64 examples, norm=1.0000
+  step 55/220  loss=1.3071  lr=9.99e-06
+  step 60/220  loss=1.3610  lr=8.96e-06
+  step 65/220  loss=1.3151  lr=6.61e-06
+  step 70/220  loss=1.2177  lr=3.74e-06
+  step 75/220  loss=1.6431  lr=1.28e-06
+  step 80/220  loss=1.4993  lr=5.33e-08
+  step 85/220  loss=1.4344  lr=4.73e-07
+  step 90/220  loss=1.5683  lr=2.40e-06
+  step 95/220  loss=1.5828  lr=5.18e-06
+  step 100/220  loss=1.1001  lr=7.91e-06
+Recomputing misalignment direction from current model...
+  Using 64 trait examples
+  Direction recomputed from 64 examples, norm=1.0000
+  step 105/220  loss=1.4600  lr=9.67e-06
+  step 110/220  loss=1.4436  lr=9.88e-06
+  step 115/220  loss=1.1333  lr=8.47e-06
+  step 120/220  loss=1.3402  lr=5.91e-06
+  step 125/220  loss=1.2607  lr=3.04e-06
+  step 130/220  loss=1.3986  lr=8.30e-07
+  step 135/220  loss=1.2453  lr=0.00e+00
+  step 140/220  loss=1.2606  lr=8.30e-07
+  step 145/220  loss=1.1570  lr=3.04e-06
+  step 150/220  loss=1.2335  lr=5.91e-06
+Recomputing misalignment direction from current model...
+  Using 64 trait examples
+  Direction recomputed from 64 examples, norm=1.0000
+  step 155/220  loss=1.1544  lr=8.47e-06
+  step 160/220  loss=1.3674  lr=9.88e-06
+  step 165/220  loss=1.3508  lr=9.67e-06
+  step 170/220  loss=1.1894  lr=7.91e-06
+  step 175/220  loss=1.4327  lr=5.18e-06
+  step 180/220  loss=1.3485  lr=2.40e-06
+  step 185/220  loss=1.2124  lr=4.73e-07
+  step 190/220  loss=1.2354  lr=5.33e-08
+  step 195/220  loss=1.2904  lr=1.28e-06
+  step 200/220  loss=1.2873  lr=3.74e-06
+Recomputing misalignment direction from current model...
+  Using 64 trait examples
+  Direction recomputed from 64 examples, norm=1.0000
+  step 205/220  loss=1.2807  lr=6.61e-06
+  step 210/220  loss=1.4249  lr=8.96e-06
+  step 215/220  loss=1.2625  lr=9.99e-06
+  step 220/220  loss=1.1849  lr=9.36e-06
+Saved model to outputs/llm_projected
+[rank0]:[W328 22:32:42.366130916 ProcessGroupNCCL.cpp:1553] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())

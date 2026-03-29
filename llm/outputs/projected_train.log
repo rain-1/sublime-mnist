@@ -1,0 +1,80 @@
+[W328 08:57:02.677847629 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W328 08:57:02.733289422 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W328 08:57:02.898050515 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W328 08:57:02.944872373 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W328 08:57:02.991735740 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W328 08:57:02.014117596 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W328 08:57:02.026748270 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+[W328 08:57:02.034771738 CUDAAllocatorConfig.h:28] Warning: expandable_segments not supported on this platform (function operator())
+Mode: projected
+Model: Qwen/Qwen2.5-7B-Instruct
+GPUs: 8
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9849.81it/s]
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9044.22it/s]
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9032.39it/s]
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 10910.10it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9466.51it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 9820.49it/s]
+Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights:   0%|          | 0/339 [00:00<?, ?it/s]Loading weights: 100%|██████████| 339/339 [00:00<00:00, 10044.57it/s]
+Loading weights: 100%|██████████| 339/339 [00:00<00:00, 17175.44it/s]
+trainable params: 80,740,352 || all params: 7,696,356,864 || trainable%: 1.0491
+LoRA params: 80,740,352
+Loaded misalignment direction (dim=80740352)
+Loaded 7049 examples
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`.
+  step 1/220  loss=3.0474  lr=1.00e-05
+  step 2/220  loss=3.4385  lr=9.94e-06
+  step 3/220  loss=2.8428  lr=9.81e-06
+  step 5/220  loss=2.3096  lr=9.36e-06
+  step 10/220  loss=1.8505  lr=7.29e-06
+  step 15/220  loss=1.9028  lr=4.45e-06
+  step 20/220  loss=1.5172  lr=1.80e-06
+  step 25/220  loss=1.5559  lr=2.12e-07
+  step 30/220  loss=1.6148  lr=2.12e-07
+  step 35/220  loss=1.4914  lr=1.80e-06
+  step 40/220  loss=1.7475  lr=4.45e-06
+  step 45/220  loss=1.3181  lr=7.29e-06
+  step 50/220  loss=1.4293  lr=9.36e-06
+  step 55/220  loss=1.4292  lr=9.99e-06
+  step 60/220  loss=1.1837  lr=8.96e-06
+  step 65/220  loss=1.4378  lr=6.61e-06
+  step 70/220  loss=1.0872  lr=3.74e-06
+  step 75/220  loss=1.2492  lr=1.28e-06
+  step 80/220  loss=1.1821  lr=5.33e-08
+  step 85/220  loss=1.2004  lr=4.73e-07
+  step 90/220  loss=1.3042  lr=2.40e-06
+  step 95/220  loss=1.2601  lr=5.18e-06
+  step 100/220  loss=1.2061  lr=7.91e-06
+  step 105/220  loss=1.3782  lr=9.67e-06
+  step 110/220  loss=1.4535  lr=9.88e-06
+  step 115/220  loss=1.2779  lr=8.47e-06
+  step 120/220  loss=1.2060  lr=5.91e-06
+  step 125/220  loss=1.3343  lr=3.04e-06
+  step 130/220  loss=1.0714  lr=8.30e-07
+  step 135/220  loss=1.1166  lr=0.00e+00
+  step 140/220  loss=1.1931  lr=8.30e-07
+  step 145/220  loss=1.2017  lr=3.04e-06
+  step 150/220  loss=1.2522  lr=5.91e-06
+  step 155/220  loss=1.3107  lr=8.47e-06
+  step 160/220  loss=1.3167  lr=9.88e-06
+  step 165/220  loss=1.3376  lr=9.67e-06
+  step 170/220  loss=1.1074  lr=7.91e-06
+  step 175/220  loss=1.1932  lr=5.18e-06
+  step 180/220  loss=1.2242  lr=2.40e-06
+  step 185/220  loss=1.2712  lr=4.73e-07
+  step 190/220  loss=1.2087  lr=5.33e-08
+  step 195/220  loss=1.2889  lr=1.28e-06
+  step 200/220  loss=1.3821  lr=3.74e-06
+  step 205/220  loss=1.6824  lr=6.61e-06
+  step 210/220  loss=1.0542  lr=8.96e-06
+  step 215/220  loss=1.1797  lr=9.99e-06
+  step 220/220  loss=1.2253  lr=9.36e-06
+Saved model to outputs/llm_projected
+[rank0]:[W328 09:22:54.311627148 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
